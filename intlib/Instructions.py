@@ -1,6 +1,3 @@
-import xml.etree.ElementTree
-import re
-
 
 class Instr:
     def __init__(self, opcode, arg1=None, arg2=None, arg3=None):
