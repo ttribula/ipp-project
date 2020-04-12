@@ -72,36 +72,64 @@ class XmlParser:
 
         # -----------Kontrola instrukci---------------
         for instr in self.root:
-            if instr.attr['opcode'] in ['CREATEFRAME', 'PUSHFRAME', 'POPFRAME', 'RETURN', "BREAK"]:
-                if len(list(instr)) is not 0:
-                    # TODO: ERROR nespravny pocet argumentu instrukce
-                    exit(31)
-                self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0]))
-            elif instr.attr['opcode'] in ['DEFVAR', 'POPS']:
-                if len(list(instr)) is not 1:
-                    # TODO: ERROR nespravny pocet argumentu instrukce
-                    exit(31)
-                self.check_variable(instr[0])
-                self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0]))
-            elif instr.attr['opcode'] in ['CALL', 'LABEL', 'JUMP']:
-                if len(list(instr)) is not 1:
-                    # TODO: ERROR nespravny pocet argumentu instrukce
-                    exit(31)
-                self.check_label(instr[0])
-                self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0]))
-            elif instr.attr['opcode'] in ['PUSHS', 'WRITE', 'EXIT', 'DPRINT']:
-                if len(list(instr)) is not 1:
-                    # TODO: ERROR nespravny pocet argumentu instrukce
-                    exit(31)
-                self.check_symbol(instr[0])
-                self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0]))
-            elif instr.attr['opcode'] in ['MOVE', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']:
-                if len(list(instr)) is not 2:
-                    # TODO: ERROR nespravny pocet argumentu instrukce
-                    exit(31)
-                self.check_variable(instr[0])
-                self.check_symbol(instr[1])
-                self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0], arg2=instr[1]))
+            pass
+        if instr.attr['opcode'] in ['CREATEFRAME', 'PUSHFRAME', 'POPFRAME', 'RETURN', "BREAK"]:
+            if len(list(instr)) is not 0:
+                # TODO: ERROR nespravny pocet argumentu instrukce
+                exit(31)
+            self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0]))
+        elif instr.attr['opcode'] in ['DEFVAR', 'POPS']:
+            if len(list(instr)) is not 1:
+                # TODO: ERROR nespravny pocet argumentu instrukce
+                exit(31)
+            self.check_variable(instr[0])
+            self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0]))
+        elif instr.attr['opcode'] in ['CALL', 'LABEL', 'JUMP']:
+            if len(list(instr)) is not 1:
+                # TODO: ERROR nespravny pocet argumentu instrukce
+                exit(31)
+            self.check_label(instr[0])
+            self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0]))
+        elif instr.attr['opcode'] in ['PUSHS', 'WRITE', 'EXIT', 'DPRINT']:
+            if len(list(instr)) is not 1:
+                # TODO: ERROR nespravny pocet argumentu instrukce
+                exit(31)
+            self.check_symbol(instr[0])
+            self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0]))
+        elif instr.attr['opcode'] in ['MOVE', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']:
+            if len(list(instr)) is not 2:
+                # TODO: ERROR nespravny pocet argumentu instrukce
+                exit(31)
+            self.check_variable(instr[0])
+            self.check_symbol(instr[1])
+            self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0], arg2=instr[1]))
+        elif instr.attr['opcode'] is 'READ':
+            if len(list(instr)) is not 2:
+                # TODO: ERROR nespravny pocet argumentu instrukce
+                exit(31)
+            self.check_variable(instr[0])
+            self.check_type(instr[1])
+            self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0], arg2=instr[1]))
+        elif instr.attr['opcode'] in ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR',
+                                      'STRI2INT', 'CONCAT', 'GETCHAR', 'SETCHAR']:
+            if len(list(instr)) is not 3:
+                # TODO: ERROR nespravny pocet argumentu instrukce
+                exit(31)
+            self.check_variable(instr[0])
+            self.check_symbol(instr[1])
+            self.check_symbol(instr[2])
+            self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0], arg2=instr[1], arg3=instr[2]))
+        elif instr.attr['opcode'] in ['JUMPIFEQ', 'JUMPIFNEQ']:
+            if len(list(instr)) is not 3:
+                # TODO: ERROR nespravny pocet argumentu instrukce
+                exit(31)
+            self.check_label(instr[0])
+            self.check_symbol(instr[1])
+            self.check_symbol(instr[2])
+            self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0], arg2=instr[1], arg3=instr[2]))
+        else:
+            # TODO: ERROR nepovolena instrukce
+            exit(32)
 
     def check_variable(self, variable):
         if variable.attr['type'] is not 'var':
