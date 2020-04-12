@@ -82,56 +82,56 @@ class XmlParser:
             if len(list(instr)) is not 1:
                 # TODO: ERROR nespravny pocet argumentu instrukce
                 exit(31)
-            self.check_variable(instr[0])
+            self.__check_variable(instr[0])
             self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0]))
         elif instr.attr['opcode'] in ['CALL', 'LABEL', 'JUMP']:
             if len(list(instr)) is not 1:
                 # TODO: ERROR nespravny pocet argumentu instrukce
                 exit(31)
-            self.check_label(instr[0])
+            self.__check_label(instr[0])
             self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0]))
         elif instr.attr['opcode'] in ['PUSHS', 'WRITE', 'EXIT', 'DPRINT']:
             if len(list(instr)) is not 1:
                 # TODO: ERROR nespravny pocet argumentu instrukce
                 exit(31)
-            self.check_symbol(instr[0])
+            self.__check_symbol(instr[0])
             self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0]))
         elif instr.attr['opcode'] in ['MOVE', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']:
             if len(list(instr)) is not 2:
                 # TODO: ERROR nespravny pocet argumentu instrukce
                 exit(31)
-            self.check_variable(instr[0])
-            self.check_symbol(instr[1])
+            self.__check_variable(instr[0])
+            self.__check_symbol(instr[1])
             self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0], arg2=instr[1]))
         elif instr.attr['opcode'] is 'READ':
             if len(list(instr)) is not 2:
                 # TODO: ERROR nespravny pocet argumentu instrukce
                 exit(31)
-            self.check_variable(instr[0])
-            self.check_type(instr[1])
+            self.__check_variable(instr[0])
+            self.__check_type(instr[1])
             self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0], arg2=instr[1]))
         elif instr.attr['opcode'] in ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR',
                                       'STRI2INT', 'CONCAT', 'GETCHAR', 'SETCHAR']:
             if len(list(instr)) is not 3:
                 # TODO: ERROR nespravny pocet argumentu instrukce
                 exit(31)
-            self.check_variable(instr[0])
-            self.check_symbol(instr[1])
-            self.check_symbol(instr[2])
+            self.__check_variable(instr[0])
+            self.__check_symbol(instr[1])
+            self.__check_symbol(instr[2])
             self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0], arg2=instr[1], arg3=instr[2]))
         elif instr.attr['opcode'] in ['JUMPIFEQ', 'JUMPIFNEQ']:
             if len(list(instr)) is not 3:
                 # TODO: ERROR nespravny pocet argumentu instrukce
                 exit(31)
-            self.check_label(instr[0])
-            self.check_symbol(instr[1])
-            self.check_symbol(instr[2])
+            self.__check_label(instr[0])
+            self.__check_symbol(instr[1])
+            self.__check_symbol(instr[2])
             self.instrList.insert_instr(Instr(instr.attr['opcode'], arg1=instr[0], arg2=instr[1], arg3=instr[2]))
         else:
             # TODO: ERROR nepovolena instrukce
             exit(32)
 
-    def check_variable(self, variable):
+    def __check_variable(self, variable):
         if variable.attr['type'] is not 'var':
             # TODO: ERROR wrong atribut promenne
             exit(52)
@@ -139,9 +139,9 @@ class XmlParser:
             # TODO: ERROR bad value of var
             exit(32)
 
-    def check_symbol(self, symbol):
+    def __check_symbol(self, symbol):
         if symbol.attr['type'] is 'var':
-            self.check_variable(symbol)
+            self.__check_variable(symbol)
         elif symbol.attr['type'] is 'int':
             if symbol.value is None or not re.match('^([+-]?[1-9][0-9]*|[+-]?(0-9))$', symbol.value):
                 # TODO: ERROR int neni cislo
@@ -166,7 +166,7 @@ class XmlParser:
             # TODO: ERROR symbol neni var/int/bool/nil/string
             exit(52)
 
-    def check_label(self, label):
+    def __check_label(self, label):
         if label.attr['type'] is not 'label':
             # TODO: ERROR typ neni label
             exit(52)
@@ -174,7 +174,7 @@ class XmlParser:
             # TODO: ERROR bad label
             exit(32)
 
-    def check_type(self, type):
+    def __check_type(self, type):
         if type.attr['type'] is not 'type':
             # TODO: ERROR chybny atribut type
             exit(52)
