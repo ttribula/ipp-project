@@ -5,7 +5,6 @@ from intlib.Instructions import InstrList
 from intlib.XmlParser import XmlParser
 import sys
 
-
 from time import sleep
 
 argCheck = ArgCheck()
@@ -18,6 +17,7 @@ xmlParser.parse()
 
 instruction = instrList.get_instr()
 while instruction is not None:
+    print(instruction.opCode)
     if instruction.opCode == 'CREATEFRAME':
         frames.create_tmp_frame()
     elif instruction.opCode == 'PUSHFRAME':
@@ -131,5 +131,170 @@ while instruction is not None:
             except Exception:
                 input = ''
             frames.set_variable(instruction.arg1, 'string', input)
+    elif instruction.opCode in ['ADD', 'SUB', 'MUL', 'IDIV']:
+        is_var, type, name = frames.get_value_of_arg(instruction.arg2)
+        is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if type != 'int' or type2 != 'int':
+            if (is_var and type != 'int') or (is_var2 and type2 != 'int'):
+                print('Spatny datovy typ promenne.', file=sys.stderr)
+                exit(53)
+            print('Spatny datovy typ operandu.', file=sys.stderr)
+            exit(52)
+        if instruction.opCode == 'ADD':
+            frames.set_variable(instruction.arg1, type, str(int(name) + int(name2)))
+        elif instruction.opCode == 'SUB':
+            frames.set_variable(instruction.arg1, type, str(int(name) - int(name2)))
+        elif instruction.opCode == 'MUL':
+            frames.set_variable(instruction.arg1, type, str(int(name) * int(name2)))
+        else:
+            if name2 == '0':
+                print('Deleni nulou.', file=sys.stderr)
+                exit(57)
+            frames.set_variable(instruction.arg1, type, str(int(name) // int(name2)))
+    elif instruction.opCode in ['LT', 'GT']:
+        is_var, type, name = frames.get_value_of_arg(instruction.arg2)
+        is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if type != type2:
+            if is_var or is_var2:
+                print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+                exit(53)
+            print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+            exit(52)
+        if instruction.opCode == 'LT':
+            if type == 'int':
+                if int(name) < int(name2):
+                    frames.set_variable(instruction.arg1, 'bool', 'true')
+                else:
+                    frames.set_variable(instruction.arg1, 'bool', 'false')
+            elif type == 'bool':
+                if name == 'false' and name2 == 'true':
+                    frames.set_variable(instruction.arg1, 'bool', 'true')
+                else:
+                    frames.set_variable(instruction.arg1, 'bool', 'false')
+            else:
+                if name < name2:
+                    frames.set_variable(instruction.arg1, 'bool', 'true')
+                else:
+                    frames.set_variable(instruction.arg1, 'bool', 'false')
+        else:
+            if type == 'int':
+                if int(name) > int(name2):
+                    frames.set_variable(instruction.arg1, 'bool', 'true')
+                else:
+                    frames.set_variable(instruction.arg1, 'bool', 'false')
+            elif type == 'bool':
+                if name == 'true' and name2 == 'false':
+                    frames.set_variable(instruction.arg1, 'bool', 'true')
+                else:
+                    frames.set_variable(instruction.arg1, 'bool', 'false')
+            else:
+                if name > name2:
+                    frames.set_variable(instruction.arg1, 'bool', 'true')
+                else:
+                    frames.set_variable(instruction.arg1, 'bool', 'false')
+    elif instruction.opCode == 'EQ':
+        is_var, type, name = frames.get_value_of_arg(instruction.arg2)
+        is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if type == 'nil':
+            if name == 'nil' and name2 == 'nil':
+                frames.set_variable(instruction.arg1, 'bool', 'true')
+            else:
+                frames.set_variable(instruction.arg1, 'bool', 'false')
+        elif type == type2:
+            if type == 'int':
+                if int(name) == int(name2):
+                    frames.set_variable(instruction.arg1, 'bool', 'true')
+                else:
+                    frames.set_variable(instruction.arg1, 'bool', 'false')
+            else:
+                if name == name2:
+                    frames.set_variable(instruction.arg1, 'bool', 'true')
+                else:
+                    frames.set_variable(instruction.arg1, 'bool', 'false')
+        else:
+            if is_var or is_var2:
+                print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+                exit(53)
+            print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+            exit(52)
+    elif instruction.opCode in ['AND', 'OR']:
+        is_var, type, name = frames.get_value_of_arg(instruction.arg2)
+        is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if type != 'bool' or type2 != 'bool':
+            if is_var or is_var2:
+                print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+                exit(53)
+            print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+            exit(52)
+        if instruction.opCode == 'AND':
+            if name == 'true' and name2 == 'true':
+                frames.set_variable(instruction.arg1, 'bool', 'true')
+            else:
+                frames.set_variable(instruction.arg1, 'bool', 'false')
+        elif instruction.opCode == 'OR':
+            if name == 'true' or name2 == 'true':
+                frames.set_variable(instruction.arg1, 'bool', 'true')
+            else:
+                frames.set_variable(instruction.arg1, 'bool', 'false')
+    elif instruction.opCode == 'STRI2INT':
+        is_var, type, name = frames.get_value_of_arg(instruction.arg2)
+        is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if type != 'string' or type2 != 'int':
+            if is_var or is_var2:
+                print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+                exit(53)
+            print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+            exit(52)
+        index = int(name2)
+        if index < 0 or index > len(name)-1:
+            print('Indexace mimo dany retezec.', file=sys.stderr)
+            exit(58)
+        frames.set_variable(instruction.arg1, 'int', ord(name[index]))
+    elif instruction.opCode == 'CONCAT':
+        is_var, type, name = frames.get_value_of_arg(instruction.arg2)
+        is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if type != 'string' or type2 != 'string':
+            if is_var or is_var2:
+                print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+                exit(53)
+            print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+            exit(52)
+        frames.set_variable(instruction.arg1, 'string', name + name2)
+    elif instruction.opCode == 'GETCHAR':
+        is_var, type, name = frames.get_value_of_arg(instruction.arg2)
+        is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if type != 'string' or type2 != 'int':
+            if is_var or is_var2:
+                print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+                exit(53)
+            print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+            exit(52)
+        index = int(name2)
+        if index < 0 or index > len(name) - 1:
+            print('Indexace mimo dany retezec.', file=sys.stderr)
+            exit(58)
+        frames.set_variable(instruction.arg1, 'int', name[index])
+    elif instruction.opCode == 'SETCHAR':
+        is_var, type, name = frames.get_value_of_arg(instruction.arg1)
+        is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg2)
+        is_var3, type3, name3 = frames.get_value_of_arg(instruction.arg3)
+        if type != 'string' or type2 != 'int' or type3 != 'string':
+            if is_var or is_var2 or is_var3:
+                print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+                exit(53)
+            print('Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
+            exit(52)
+        index = int(name2)
+        if index < 0 or index > len(name) - 1:
+            print('Indexace mimo dany retezec.', file=sys.stderr)
+            exit(58)
+        if not name3:
+            print('Retezec pro nahrazeni charu je prazdny.', file=sys.stderr)
+            exit(58)
+        name = list(name)
+        name[index] = name3[0]
+        name = ''.join(name)
+        frames.set_variable(instruction.arg1, type, name)
+
     instruction = instrList.get_instr()
     sleep(1)

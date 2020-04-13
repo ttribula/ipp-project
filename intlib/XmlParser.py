@@ -77,7 +77,7 @@ class XmlParser:
                 if len(list(instr)) is not 0:
                     # TODO: ERROR nespravny pocet argumentu instrukce
                     exit(31)
-                self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0]))
+                self.instrList.insert_instr(Instr(instr.attrib['opcode']))
             elif instr.attrib['opcode'] in ['DEFVAR', 'POPS']:
                 if len(list(instr)) is not 1:
                     # TODO: ERROR nespravny pocet argumentu instrukce
