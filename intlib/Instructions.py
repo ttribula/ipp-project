@@ -4,13 +4,13 @@ class Instr:
         self.opCode = opcode
         self.countArg = 0
         if arg1 is not None:
-            self.arg1 = {'type': arg1.attr['type'], 'value': arg1.value}
+            self.arg1 = {'type': arg1.attrib['type'], 'value': arg1.text}
             self.countArg = 1
         if arg2 is not None:
-            self.arg2 = {'type': arg2.attr['type'], 'value': arg2.value}
+            self.arg2 = {'type': arg2.attrib['type'], 'value': arg2.text}
             self.countArg = 2
         if arg3 is not None:
-            self.arg3 = {'type': arg3.attr['type'], 'value': arg3.value}
+            self.arg3 = {'type': arg3.attrib['type'], 'value': arg3.text}
             self.countArg = 3
 
 
