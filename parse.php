@@ -300,10 +300,10 @@ function syntaxAnalysis() {
                                 $xmlInstrArg1->setAttribute("type", "var");
                             }
                             if ($line[2][0] == T_CONSTANT) {
-                                $xmlInstrArg2 = $xmlDOM->createElement("arg2", htmlspecialchars($line[2][2]));
-                                $xmlInstrArg2->setAttribute("type", $line[2][1]);
+                                $xmlInstrArg2 = $xmlDOM->createElement("arg3", htmlspecialchars($line[3][2]));
+                                $xmlInstrArg2->setAttribute("type", $line[3][1]);
                             } else {
-                                $xmlInstrArg2 = $xmlDOM->createElement("arg2", htmlspecialchars($line[2][1]));
+                                $xmlInstrArg2 = $xmlDOM->createElement("arg3", htmlspecialchars($line[3][1]));
                                 $xmlInstrArg2->setAttribute("type", "var");
                             }
                             $xmlInstr->appendChild($xmlInstrArg);
@@ -328,10 +328,10 @@ function syntaxAnalysis() {
                                 $xmlInstrArg1->setAttribute("type", "var");
                             }
                             if ($line[2][0] == T_CONSTANT) {
-                                $xmlInstrArg2 = $xmlDOM->createElement("arg2", htmlspecialchars($line[2][2]));
-                                $xmlInstrArg2->setAttribute("type", $line[2][1]);
+                                $xmlInstrArg2 = $xmlDOM->createElement("arg3", htmlspecialchars($line[3][2]));
+                                $xmlInstrArg2->setAttribute("type", $line[3][1]);
                             } else {
-                                $xmlInstrArg2 = $xmlDOM->createElement("arg2", htmlspecialchars($line[2][1]));
+                                $xmlInstrArg2 = $xmlDOM->createElement("arg3", htmlspecialchars($line[3][1]));
                                 $xmlInstrArg2->setAttribute("type", "var");
                             }
                             $xmlInstr->appendChild($xmlInstrArg);
