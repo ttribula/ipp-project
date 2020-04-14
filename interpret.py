@@ -5,8 +5,6 @@ from intlib.Instructions import InstrList
 from intlib.XmlParser import XmlParser
 import sys
 
-from time import sleep
-
 argCheck = ArgCheck()
 argCheck.check()
 frames = Frames()

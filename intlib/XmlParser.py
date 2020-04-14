@@ -4,7 +4,6 @@ import sys
 
 from intlib.Instructions import Instr
 
-from time import sleep
 
 class XmlParser:
     def __init__(self, source, instr_list):
@@ -60,10 +59,10 @@ class XmlParser:
                     exit(31)
                 if 'type' not in arg.attrib:
                     print('CHYBA: Atribut type chybi v elementu instrukce.', file=sys.stderr)
-                    exit(31)
+                    exit(32)
                 if arg.attrib['type'] not in ['int', 'bool', 'string', 'nil', 'label', 'type', 'var']:
                     print('CHYBA: Spatny datovy typ v atributu argumentu.', file=sys.stderr)
-                    exit(31)
+                    exit(32)
             for i in instr_order:
                 if int(i) <= 0:
                     print('CHYBA: Zaporny atribut argumentu order.', file=sys.stderr)
@@ -76,37 +75,49 @@ class XmlParser:
         for instr in self.root:
             if instr.attrib['opcode'] in ['CREATEFRAME', 'PUSHFRAME', 'POPFRAME', 'RETURN', 'BREAK']:
                 if len(list(instr)) != 0:
-                    print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 0), file=sys.stderr)
+                    print(
+                        'CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 0),
+                        file=sys.stderr)
                     exit(32)
                 self.instrList.insert_instr(Instr(instr.attrib['opcode']))
             elif instr.attrib['opcode'] in ['DEFVAR', 'POPS']:
                 if len(list(instr)) != 1:
-                    print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 1), file=sys.stderr)
+                    print(
+                        'CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 1),
+                        file=sys.stderr)
                     exit(32)
                 self.__check_variable(instr[0])
                 self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0]))
             elif instr.attrib['opcode'] in ['CALL', 'LABEL', 'JUMP']:
                 if len(list(instr)) != 1:
-                    print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 1), file=sys.stderr)
+                    print(
+                        'CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 1),
+                        file=sys.stderr)
                     exit(32)
                 self.__check_label(instr[0])
                 self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0]))
             elif instr.attrib['opcode'] in ['PUSHS', 'WRITE', 'EXIT', 'DPRINT']:
                 if len(list(instr)) != 1:
-                    print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 1), file=sys.stderr)
+                    print(
+                        'CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 1),
+                        file=sys.stderr)
                     exit(32)
                 self.__check_symbol(instr[0])
                 self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0]))
             elif instr.attrib['opcode'] in ['MOVE', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']:
                 if len(list(instr)) != 2:
-                    print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 2), file=sys.stderr)
+                    print(
+                        'CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 2),
+                        file=sys.stderr)
                     exit(32)
                 self.__check_variable(instr[0])
                 self.__check_symbol(instr[1])
                 self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0], arg2=instr[1]))
             elif instr.attrib['opcode'] == 'READ':
                 if len(list(instr)) != 2:
-                    print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 2), file=sys.stderr)
+                    print(
+                        'CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 2),
+                        file=sys.stderr)
                     exit(32)
                 self.__check_variable(instr[0])
                 self.__check_type(instr[1])
@@ -114,7 +125,9 @@ class XmlParser:
             elif instr.attrib['opcode'] in ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR',
                                             'STRI2INT', 'CONCAT', 'GETCHAR', 'SETCHAR']:
                 if len(list(instr)) != 3:
-                    print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 3), file=sys.stderr)
+                    print(
+                        'CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 3),
+                        file=sys.stderr)
                     exit(32)
                 self.__check_variable(instr[0])
                 self.__check_symbol(instr[1])
@@ -122,7 +135,9 @@ class XmlParser:
                 self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0], arg2=instr[1], arg3=instr[2]))
             elif instr.attrib['opcode'] in ['JUMPIFEQ', 'JUMPIFNEQ']:
                 if len(list(instr)) != 3:
-                    print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 3), file=sys.stderr)
+                    print(
+                        'CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 3),
+                        file=sys.stderr)
                     exit(32)
                 self.__check_label(instr[0])
                 self.__check_symbol(instr[1])
@@ -136,7 +151,8 @@ class XmlParser:
         if variable.attrib['type'] != 'var':
             print('CHYBA: Spatna promenna', file=sys.stderr)
             exit(52)
-        if variable.text is None or not re.match('^(GF|LF|TF)@([a-z]|[A-Z]|_|-|$|&|%|\*|!|\?)([0-9]|[a-z]|[A-Z]|_|-|$|&|%|\*|!|\?)*$', variable.text):
+        if variable.text is None or not re.match(
+                '^(GF|LF|TF)@([a-z]|[A-Z]|_|-|$|&|%|\*|!|\?)([0-9]|[a-z]|[A-Z]|_|-|$|&|%|\*|!|\?)*$', variable.text):
             print('CHYBA: Spatna hodnota promenne', file=sys.stderr)
             exit(32)
 
