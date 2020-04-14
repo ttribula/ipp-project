@@ -68,10 +68,16 @@ while instruction is not None:
         print(value, file=sys.stderr)
     elif instruction.opCode == 'MOVE':
         is_var, type, value = frames.get_value_of_arg(instruction.arg2)
+        if value is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
         frames.set_variable(instruction.arg1, type, value)
     elif instruction.opCode == 'INT2CHAR':
         is_var, type, value = frames.get_value_of_arg(instruction.arg2)
-        if type is not 'int':
+        if value is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
+        if type != 'int':
             print('CHYBA: Operand instrukce {} je spatneho typu. Potreba int.'.format(instruction.opCode), file=sys.stderr)
             exit(53)
         try:
@@ -81,7 +87,10 @@ while instruction is not None:
             exit(58)
     elif instruction.opCode == 'STRLEN':
         is_var, type, value = frames.get_value_of_arg(instruction.arg2)
-        if type is not 'string':
+        if value is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
+        if type != 'string':
             print('CHYBA: Operand instrukce {} je spatneho typu. Potreba string.'.format(instruction.opCode), file=sys.stderr)
             exit(53)
         frames.set_variable(instruction.arg1, 'int', len(value))
@@ -92,7 +101,10 @@ while instruction is not None:
         frames.set_variable(instruction.arg1, 'string', type)
     elif instruction.opCode == 'NOT':
         is_var, type, value = frames.get_value_of_arg(instruction.arg2)
-        if type is not 'bool':
+        if value is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
+        if type != 'bool':
             print('CHYBA: Operand instrukce {} je spatneho typu. Potreba bool.'.format(instruction.opCode),
                   file=sys.stderr)
             exit(53)
@@ -127,6 +139,9 @@ while instruction is not None:
     elif instruction.opCode in ['ADD', 'SUB', 'MUL', 'IDIV']:
         is_var, type, name = frames.get_value_of_arg(instruction.arg2)
         is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if name is None or name2 is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
         if type != 'int' or type2 != 'int':
             print('CHYBA: Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
             exit(53)
@@ -144,6 +159,9 @@ while instruction is not None:
     elif instruction.opCode in ['LT', 'GT']:
         is_var, type, name = frames.get_value_of_arg(instruction.arg2)
         is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if name is None or name2 is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
         if type != type2:
             print('CHYBA: Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
             exit(53)
@@ -182,6 +200,9 @@ while instruction is not None:
     elif instruction.opCode == 'EQ':
         is_var, type, name = frames.get_value_of_arg(instruction.arg2)
         is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if name is None or name2 is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
         if type == 'nil':
             if name == 'nil' and name2 == 'nil':
                 frames.set_variable(instruction.arg1, 'bool', 'true')
@@ -204,6 +225,9 @@ while instruction is not None:
     elif instruction.opCode in ['AND', 'OR']:
         is_var, type, name = frames.get_value_of_arg(instruction.arg2)
         is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if name is None or name2 is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
         if type != 'bool' or type2 != 'bool':
             print('CHYBA: Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
             exit(53)
@@ -220,6 +244,9 @@ while instruction is not None:
     elif instruction.opCode == 'STRI2INT':
         is_var, type, name = frames.get_value_of_arg(instruction.arg2)
         is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if name is None or name2 is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
         if type != 'string' or type2 != 'int':
             print('CHYBA: Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
             exit(53)
@@ -231,6 +258,9 @@ while instruction is not None:
     elif instruction.opCode == 'CONCAT':
         is_var, type, name = frames.get_value_of_arg(instruction.arg2)
         is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if name is None or name2 is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
         if type != 'string' or type2 != 'string':
             print('CHYBA: Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
             exit(53)
@@ -238,6 +268,9 @@ while instruction is not None:
     elif instruction.opCode == 'GETCHAR':
         is_var, type, name = frames.get_value_of_arg(instruction.arg2)
         is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if name is None or name2 is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
         if type != 'string' or type2 != 'int':
             print('CHYBA: Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
             exit(53)
@@ -250,6 +283,9 @@ while instruction is not None:
         is_var, type, name = frames.get_value_of_arg(instruction.arg1)
         is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg2)
         is_var3, type3, name3 = frames.get_value_of_arg(instruction.arg3)
+        if name is None or name2 is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
         if type != 'string' or type2 != 'int' or type3 != 'string':
             print('CHYBA: Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
             exit(53)
@@ -267,6 +303,9 @@ while instruction is not None:
     elif instruction.opCode in ['JUMPIFEQ', 'JUMPIFNEQ']:
         is_var, type, name = frames.get_value_of_arg(instruction.arg2)
         is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
+        if name is None or name2 is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
         if (type != type2) or not (type != 'nil' or type2 != 'nil'):
             print('CHYBA: Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
             exit(53)

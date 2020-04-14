@@ -1,4 +1,3 @@
-
 class Instr:
     def __init__(self, opcode, arg1=None, arg2=None, arg3=None):
         self.opCode = opcode
@@ -16,7 +15,7 @@ class Instr:
 
 class InstrList:
     def __init__(self):
-        self.instrList = {}
+        self.instrDict = {}
         self.instrPos = 0
         self.counter = 1
         self.labelList = {}
@@ -25,7 +24,7 @@ class InstrList:
     def get_instr(self):
         if self.counter <= self.instrPos:
             self.counter += 1
-            return self.instrList[self.counter - 1]
+            return self.instrDict[self.counter - 1]
         return None
 
     def get_counter(self):
@@ -36,7 +35,7 @@ class InstrList:
 
     def insert_instr(self, instr):
         self.instrPos += 1
-        self.instrList[self.instrPos] = instr
+        self.instrDict[self.instrPos] = instr
         if instr.opCode == 'LABEL':
             if instr.arg1['value'] in self.labelList:
                 # TODO: ERROR duplicita navesti

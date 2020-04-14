@@ -25,31 +25,31 @@ class XmlParser:
 
         if self.root.tag != 'program':
             print('CHYBA: Korenovy element nema <program>.', file=sys.stderr)
-            exit(31)
+            exit(32)
 
         for attr in self.root.attrib:
             if attr not in ['language', 'name', 'description']:
                 print('CHYBA: Nepovolene atributy korenoveho elementu <program>.', file=sys.stderr)
-                exit(31)
+                exit(32)
 
         if 'language' not in self.root.attrib:
             print('CHYBA: Neni definovan jazyk v korenovem elementu <program>.', file=sys.stderr)
-            exit(31)
+            exit(32)
         if str(self.root.attrib['language']).lower() != 'ippcode20':
             print('CHYBA: Jazyk definovany v korenovem elementu <program> neni ippcode20.', file=sys.stderr)
-            exit(31)
+            exit(32)
 
         instr_order = []
         for instr in self.root:
             if instr.tag != 'instruction':
                 print('CHYBA: Spatny nazev elementu instrukce.', file=sys.stderr)
-                exit(31)
+                exit(32)
             if 'opcode' not in instr.attrib:
                 print('CHYBA: Atribut opcode chybi v elementu instrukce.', file=sys.stderr)
-                exit(31)
+                exit(32)
             if 'order' not in instr.attrib:
                 print('CHYBA: Atribut order chybi v elementu instrukce.', file=sys.stderr)
-                exit(31)
+                exit(32)
             instr_order.append(instr.attrib['order'])
 
             arg_count = 0
@@ -67,63 +67,63 @@ class XmlParser:
             for i in instr_order:
                 if int(i) <= 0:
                     print('CHYBA: Zaporny atribut argumentu order.', file=sys.stderr)
-                    exit(31)
-            if len(set(instr_order)) is not len(instr_order):
+                    exit(32)
+            if len(set(instr_order)) != len(instr_order):
                 print('CHYBA: Duplicitni hodnota order.', file=sys.stderr)
-                exit(31)
+                exit(32)
 
         # -----------Kontrola instrukci---------------
         for instr in self.root:
             if instr.attrib['opcode'] in ['CREATEFRAME', 'PUSHFRAME', 'POPFRAME', 'RETURN', 'BREAK']:
-                if len(list(instr)) is not 0:
+                if len(list(instr)) != 0:
                     print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 0), file=sys.stderr)
-                    exit(31)
+                    exit(32)
                 self.instrList.insert_instr(Instr(instr.attrib['opcode']))
             elif instr.attrib['opcode'] in ['DEFVAR', 'POPS']:
-                if len(list(instr)) is not 1:
+                if len(list(instr)) != 1:
                     print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 1), file=sys.stderr)
-                    exit(31)
+                    exit(32)
                 self.__check_variable(instr[0])
                 self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0]))
             elif instr.attrib['opcode'] in ['CALL', 'LABEL', 'JUMP']:
-                if len(list(instr)) is not 1:
+                if len(list(instr)) != 1:
                     print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 1), file=sys.stderr)
-                    exit(31)
+                    exit(32)
                 self.__check_label(instr[0])
                 self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0]))
             elif instr.attrib['opcode'] in ['PUSHS', 'WRITE', 'EXIT', 'DPRINT']:
-                if len(list(instr)) is not 1:
+                if len(list(instr)) != 1:
                     print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 1), file=sys.stderr)
-                    exit(31)
+                    exit(32)
                 self.__check_symbol(instr[0])
                 self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0]))
             elif instr.attrib['opcode'] in ['MOVE', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']:
-                if len(list(instr)) is not 2:
+                if len(list(instr)) != 2:
                     print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 2), file=sys.stderr)
-                    exit(31)
+                    exit(32)
                 self.__check_variable(instr[0])
                 self.__check_symbol(instr[1])
                 self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0], arg2=instr[1]))
             elif instr.attrib['opcode'] == 'READ':
-                if len(list(instr)) is not 2:
+                if len(list(instr)) != 2:
                     print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 2), file=sys.stderr)
-                    exit(31)
+                    exit(32)
                 self.__check_variable(instr[0])
                 self.__check_type(instr[1])
                 self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0], arg2=instr[1]))
             elif instr.attrib['opcode'] in ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR',
                                             'STRI2INT', 'CONCAT', 'GETCHAR', 'SETCHAR']:
-                if len(list(instr)) is not 3:
+                if len(list(instr)) != 3:
                     print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 3), file=sys.stderr)
-                    exit(31)
+                    exit(32)
                 self.__check_variable(instr[0])
                 self.__check_symbol(instr[1])
                 self.__check_symbol(instr[2])
                 self.instrList.insert_instr(Instr(instr.attrib['opcode'], arg1=instr[0], arg2=instr[1], arg3=instr[2]))
             elif instr.attrib['opcode'] in ['JUMPIFEQ', 'JUMPIFNEQ']:
-                if len(list(instr)) is not 3:
+                if len(list(instr)) != 3:
                     print('CHYBA: Nespravny poceet argumentu instrukce {}. Potreba: {}'.format(instr.attrib['opcode'], 3), file=sys.stderr)
-                    exit(31)
+                    exit(32)
                 self.__check_label(instr[0])
                 self.__check_symbol(instr[1])
                 self.__check_symbol(instr[2])

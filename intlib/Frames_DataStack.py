@@ -65,7 +65,7 @@ class Frames:
                 # TODO: ERROR promenna neni v ramci
                 exit(54)
             # fce vraci 1, kdyz je argument promenna, typ a hodnotu
-            return 1, stack_frame['type'], stack_frame['value']
+            return 1, stack_frame[name]['type'], stack_frame[name]['value']
         if arg['type'] in ['int', 'bool', 'nil', 'string', 'type']:
             return 0, arg['type'], arg['value']
 
@@ -78,5 +78,5 @@ class Frames:
         if name not in stack_frame:
             # TODO: ERROR promenna neni v ramci
             exit(54)
-        stack_frame['type'] = type
-        stack_frame['value'] = value
+        stack_frame[name]['type'] = type
+        stack_frame[name]['value'] = value
