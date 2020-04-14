@@ -299,7 +299,7 @@ function syntaxAnalysis() {
                                 $xmlInstrArg1 = $xmlDOM->createElement("arg2", htmlspecialchars($line[2][1]));
                                 $xmlInstrArg1->setAttribute("type", "var");
                             }
-                            if ($line[2][0] == T_CONSTANT) {
+                            if ($line[3][0] == T_CONSTANT) {
                                 $xmlInstrArg2 = $xmlDOM->createElement("arg3", htmlspecialchars($line[3][2]));
                                 $xmlInstrArg2->setAttribute("type", $line[3][1]);
                             } else {
@@ -319,7 +319,7 @@ function syntaxAnalysis() {
                                 ($line[2][0] == T_CONSTANT || $line[2][0] == T_ID) &&
                                 ($line[3][0] == T_CONSTANT || $line[3][0] == T_ID)) {
                             $xmlInstrArg = $xmlDOM->createElement("arg1", htmlspecialchars($line[1][1]));
-                            $xmlInstrArg->setAttribute("type", "var");
+                            $xmlInstrArg->setAttribute("type", "label");
                             if ($line[2][0] == T_CONSTANT) {
                                 $xmlInstrArg1 = $xmlDOM->createElement("arg2", htmlspecialchars($line[2][2]));
                                 $xmlInstrArg1->setAttribute("type", $line[2][1]);
@@ -327,7 +327,7 @@ function syntaxAnalysis() {
                                 $xmlInstrArg1 = $xmlDOM->createElement("arg2", htmlspecialchars($line[2][1]));
                                 $xmlInstrArg1->setAttribute("type", "var");
                             }
-                            if ($line[2][0] == T_CONSTANT) {
+                            if ($line[3][0] == T_CONSTANT) {
                                 $xmlInstrArg2 = $xmlDOM->createElement("arg3", htmlspecialchars($line[3][2]));
                                 $xmlInstrArg2->setAttribute("type", $line[3][1]);
                             } else {
@@ -364,6 +364,7 @@ function printHelp() {
 }
 
 
+ # TODO: FIX PROGRAM ARGUMENTS TO GETOPTS
 if ($argc == 1) {
     try {
         echo syntaxAnalysis();

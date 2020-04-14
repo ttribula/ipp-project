@@ -4,6 +4,7 @@ import sys
 
 from intlib.Instructions import Instr
 
+from time import sleep
 
 class XmlParser:
     def __init__(self, source, instr_list):
@@ -135,7 +136,7 @@ class XmlParser:
         if variable.attrib['type'] != 'var':
             print('CHYBA: Spatna promenna', file=sys.stderr)
             exit(52)
-        if variable.text is None or not re.match('^(GF|LF|TF)@[a-zA-Z_\-$&%*!?][\w_\-$&%*!?]*$', variable.text):
+        if variable.text is None or not re.match('^(GF|LF|TF)@([a-z]|[A-Z]|_|-|$|&|%|\*|!|\?)([0-9]|[a-z]|[A-Z]|_|-|$|&|%|\*|!|\?)*$', variable.text):
             print('CHYBA: Spatna hodnota promenne', file=sys.stderr)
             exit(32)
 
@@ -161,7 +162,7 @@ class XmlParser:
             if not re.search('^(\\\\[0-9]{3}|[^\s\\\\#])*$', symbol.text):
                 print('CHYBA: String neodpovida zadani.', file=sys.stderr)
                 exit(32)
-            # TODO: STRING escape sequence
+            symbol.text = re.sub(r'\\([0-9]{3})', lambda x: chr(int(x.group(1))), symbol.text)
         else:
             print('CHYBA: Symbol nelze poznat.', file=sys.stderr)
             exit(52)

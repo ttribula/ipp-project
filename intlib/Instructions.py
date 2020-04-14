@@ -31,6 +31,9 @@ class InstrList:
     def get_counter(self):
         return self.counter - 1
 
+    def get_label_list(self):
+        return self.labelList;
+
     def insert_instr(self, instr):
         self.instrPos += 1
         self.instrList[self.instrPos] = instr

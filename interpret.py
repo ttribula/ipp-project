@@ -17,7 +17,7 @@ xmlParser.parse()
 
 instruction = instrList.get_instr()
 while instruction is not None:
-    print(instruction.opCode)
+    # TODO: REMOVE ALL DEBUG CODE
     if instruction.opCode == 'CREATEFRAME':
         frames.create_tmp_frame()
     elif instruction.opCode == 'PUSHFRAME':
@@ -51,9 +51,10 @@ while instruction is not None:
         instrList.set_counter_to_label(instruction.arg1)
     elif instruction.opCode == 'LABEL':
         # SLOVNIK JIZ NAPLNENY
+        instruction = instrList.get_instr()
         continue
     elif instruction.opCode == 'JUMP':
-        instrList.set_counter_to_label()
+        instrList.set_counter_to_label(instruction.arg1)
     elif instruction.opCode == 'PUSHS':
         is_var, type, value = frames.get_value_of_arg(instruction.arg1)
         dataStack.d_stack_push(type, value)
@@ -62,7 +63,7 @@ while instruction is not None:
         if value is None:
             print('CHYBA: Vypis neinicializovane promenne.', file=sys.stderr)
             exit(56)
-        print(value)
+        print(value, end='')
     elif instruction.opCode == 'DPRINT':
         print(value, file=sys.stderr)
     elif instruction.opCode == 'MOVE':
@@ -266,7 +267,7 @@ while instruction is not None:
     elif instruction.opCode in ['JUMPIFEQ', 'JUMPIFNEQ']:
         is_var, type, name = frames.get_value_of_arg(instruction.arg2)
         is_var2, type2, name2 = frames.get_value_of_arg(instruction.arg3)
-        if (type != type2) or (type != 'nil' or type2 != 'nil'):
+        if (type != type2) or not (type != 'nil' or type2 != 'nil'):
             print('CHYBA: Operandy instrukce {} ruzneho typu.'.format(instruction.opCode), file=sys.stderr)
             exit(53)
         if instruction.opCode == 'JUMPIFEQ':
@@ -279,6 +280,4 @@ while instruction is not None:
                 instrList.set_counter_to_label(instruction.arg1)
             else:
                 pass
-
     instruction = instrList.get_instr()
-    sleep(1)
