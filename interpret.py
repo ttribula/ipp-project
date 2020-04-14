@@ -39,7 +39,7 @@ while instruction is not None:
             exit(55)
         if name in stack_frame:
             print('CHYBA: Redefinice promenne v ramci.', file=sys.stderr)
-            exit(58)
+            exit(52)
         stack_frame[name] = {'type': None, 'value': None}
     elif instruction.opCode == 'POPS':
         type, value = dataStack.d_stack_pop()
@@ -62,6 +62,18 @@ while instruction is not None:
             print('CHYBA: Vypis neinicializovane promenne.', file=sys.stderr)
             exit(56)
         print(value, end='')
+    elif instruction.opCode == 'EXIT':
+        is_var, type, value = frames.get_value_of_arg(instruction.arg1)
+        if value is None:
+            print('CHYBA: Operandy instrukce {} ruzneho typu (None).'.format(instruction.opCode), file=sys.stderr)
+            exit(56)
+        if type != 'int':
+            print('CHYBA: Nevalidni typ <symb> v instrukci {}.'.format(instruction.opCode), file=sys.stderr)
+            exit(53)
+        if int(value) < 0 or int(value) > 49:
+            print('CHYBA: Nevalidni hodnota <symb> v instrukci {}.'.format(instruction.opCode), file=sys.stderr)
+            exit(57)
+        exit(int(value))
     elif instruction.opCode == 'DPRINT':
         print(value, file=sys.stderr)
     elif instruction.opCode == 'MOVE':

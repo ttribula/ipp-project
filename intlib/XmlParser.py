@@ -56,7 +56,7 @@ class XmlParser:
                 arg_count += 1
                 if arg.tag != 'arg' + str(arg_count):
                     print('CHYBA: Spatne pojmenovani argumentu.', file=sys.stderr)
-                    exit(31)
+                    exit(32)
                 if 'type' not in arg.attrib:
                     print('CHYBA: Atribut type chybi v elementu instrukce.', file=sys.stderr)
                     exit(32)
@@ -160,7 +160,7 @@ class XmlParser:
         if symbol.attrib['type'] == 'var':
             self.__check_variable(symbol)
         elif symbol.attrib['type'] == 'int':
-            if symbol.text is None or not re.match('^([+-]?[1-9][0-9]*|[+-]?(0-9))$', symbol.text):
+            if symbol.text is None or not re.match('([+-]?[1-9][0-9]*|[+-]?[0-9])', symbol.text):
                 print('CHYBA: Zadany int neni typu integer.', file=sys.stderr)
                 exit(32)
         elif symbol.attrib['type'] == 'bool':

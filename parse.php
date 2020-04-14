@@ -226,7 +226,7 @@ function syntaxAnalysis() {
 # label
                     case T_PUSHS:
                     case T_WRITE:
-                    case T_EXIT:
+                    case T_EX:
                     case T_DPRINT:
                         if ($countLine == 2 && $line[1][0] == T_CONSTANT) {
                             $xmlInstrArg = $xmlDOM->createElement("arg1", htmlspecialchars($line[1][2]));
